@@ -13,7 +13,7 @@ import java.net.UnknownHostException
 
 class Main2Activity : AppCompatActivity() {
 
-    private val stringBuffer = StringBuffer()
+
 
     companion object {
         fun start(context: Context){
@@ -30,7 +30,7 @@ class Main2Activity : AppCompatActivity() {
             super.handleMessage(msg)
             when(msg?.what){
                 1 -> {
-                    textView1.text = stringBuffer.toString()
+                    textView1.text = SocketBuilder.getInstance().stringBuffer
                 }
             }
         }
@@ -43,36 +43,37 @@ class Main2Activity : AppCompatActivity() {
         button1.setOnClickListener {
             Thread{
                 run {
-                    try {
-                        val socket = Socket("192.168.199.184",10001)
-                        val outputStream: OutputStream = socket.getOutputStream()
-                        outputStream.write(editTv.text.toString().toByteArray())
-                        outputStream.flush()
-                        socket.shutdownOutput()
-                        val inputStream: InputStream = socket.getInputStream()
-                        val inputStreamReader = InputStreamReader(inputStream)
-                        val bufferedReader = BufferedReader(inputStreamReader)
-                        var s:String? = bufferedReader.readLine()
+//                    try {
+//                        val socket = Socket("192.168.199.184",10001)
+//                        val outputStream: OutputStream = socket.getOutputStream()
+//                        outputStream.write(editTv.text.toString().toByteArray())
+//                        outputStream.flush()
+//                        socket.shutdownOutput()
+//                        val inputStream: InputStream = socket.getInputStream()
+//                        val inputStreamReader = InputStreamReader(inputStream)
+//                        val bufferedReader = BufferedReader(inputStreamReader)
+//                        var s:String? = bufferedReader.readLine()
+//
+//                        while (s != null) {
+//                            stringBuffer.append(s)
+//                            s = bufferedReader.readLine()
+//                        }
+//
+//                        handler.sendEmptyMessage(1)
+//
+//                        bufferedReader.close()
+//                        inputStreamReader.close()
+//                        inputStream.close()
+//                        outputStream.close()
+//                        socket.close()
+//                    } catch (e: UnknownHostException) {
+//                        e.printStackTrace()
+//                    } catch (e: IOException) {
+//                        e.printStackTrace()
+//                    }
 
-                        while (s != null) {
-                            stringBuffer.append(s)
-                            s = bufferedReader.readLine()
-                        }
-
-                        handler.sendEmptyMessage(1)
-
-                        bufferedReader.close()
-                        inputStreamReader.close()
-                        inputStream.close()
-                        outputStream.close()
-                        socket.close()
-                    } catch (e: UnknownHostException) {
-                        e.printStackTrace()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    } finally {
-
-                    }
+                    SocketBuilder.getInstance().getConnect("192.168.199.184",10001,editTv.text.toString())
+                    handler.sendEmptyMessage(1)
                 }
             }.start()
         }
